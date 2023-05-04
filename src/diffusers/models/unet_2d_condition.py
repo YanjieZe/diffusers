@@ -619,6 +619,7 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin)
         down_block_additional_residuals: Optional[Tuple[torch.Tensor]] = None,
         mid_block_additional_residual: Optional[torch.Tensor] = None,
         return_dict: bool = True,
+        return_feature: bool = False,
     ) -> Union[UNet2DConditionOutput, Tuple]:
         r"""
         Args:
@@ -783,6 +784,8 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin)
                 sample = upsample_block(
                     hidden_states=sample, temb=emb, res_hidden_states_tuple=res_samples, upsample_size=upsample_size
                 )
+            if i == 3 and return_feature:
+                return sample[0:1]
 
         # 6. post-process
         if self.conv_norm_out:
